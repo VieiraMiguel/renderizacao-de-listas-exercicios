@@ -10,10 +10,12 @@ import {
   LinhaHorizontal
 } from "./styled";
 import bin from "../../assets/bin.png";
+import { TarefasDeletadas } from "../TarefasDeletadas/TarefasDeletadas";
 
 export function ListaTarefas() {
   const [lista, setLista] = useState(["Fazer exercícios", "Estudar React"]);
   const [novaTarefa, setNovaTarefa] = useState("");
+  const [tarefasRemovidas, setTarefaRemovida] = useState([])
 
   const onChangeTarefa = (event) => {
     setNovaTarefa(event.target.value);
@@ -25,9 +27,20 @@ export function ListaTarefas() {
     setNovaTarefa("");
   };
 
+  function adicionaComEnter (event) {
+    if (event.key === "Enter") {
+      const novaLista = [...lista, novaTarefa];
+      setLista(novaLista);
+      setNovaTarefa("");
+    }
+  };
+
   const removeTarefa = (tarefa) => {
     const listaFiltrada = lista.filter((item) => item !== tarefa);
     setLista(listaFiltrada);
+
+    const listaRemovida = lista.filter((item) => item === tarefa)
+    setTarefaRemovida([...tarefasRemovidas, listaRemovida]);
   };
 
   return (
@@ -37,6 +50,7 @@ export function ListaTarefas() {
           placeholder="Digite aqui uma tarefa"
           value={novaTarefa}
           onChange={onChangeTarefa}
+          onKeyDown={adicionaComEnter}
         />
         <AddTaskButton onClick={adicionaTarefa}>Adicionar</AddTaskButton>
       </InputContainer>
@@ -55,6 +69,7 @@ export function ListaTarefas() {
         </ul>
       </ListaContainer>
       <LinhaHorizontal/>
+      <TarefasDeletadas tarefasRemovidas={tarefasRemovidas}/>
     </ListaTarefasContainer>
   );
 }
